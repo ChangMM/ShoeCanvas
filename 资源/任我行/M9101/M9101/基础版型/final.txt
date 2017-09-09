@@ -1,0 +1,185 @@
+﻿{
+    "image": {
+        "product": "product.png",
+        "backmask": "backmask.png",
+        "bottom": "bottom.png",
+        "back": "back.png",
+        "right": "right.png",
+        "leftmask": "leftmask.png",
+        "rightmask": "rightmask.png",
+        "top": "top.png",
+        "left": "left.png",
+        "topmask": "topmask.png",
+        "user": "user.png",
+        "zhidai": {
+            "top": "topvzhidai.png",
+            "left": "leftvzhidai.png",
+            "back": "backvzhidai.png",
+            "right": "rightvzhidai.png"
+        },
+        "baobianbu": {
+            "top": "topvbaobianbu.png",
+            "left": "leftvbaobianbu.png",
+            "back": "backvbaobianbu.png",
+            "right": "rightvbaobianbu.png"
+        },
+        "defaultProduct": "product.jpg"
+    },
+    "color": {
+        "zhidai": [
+            {
+                "price": 0,
+                "value": "0a0a0a",
+                "name": "黑色",
+                "pvalue": "B101D"
+            },
+            {
+                "price": 0,
+                "value": "4270b7",
+                "name": "海蓝",
+                "pvalue": "B204D"
+            },
+            {
+                "price": 0,
+                "value": "b91a26",
+                "name": "大红",
+                "pvalue": "R101D"
+            },
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101D"
+            },
+            {
+                "price": 0,
+                "value": "e7fb70",
+                "name": "荧光黄",
+                "pvalue": "Y101D"
+            },
+            {
+                "price": 0,
+                "value": "c7c7c7",
+                "name": "浅灰",
+                "pvalue": "G103D"
+            },
+            {
+                "price": 0,
+                "value": "008f37",
+                "name": "翠绿",
+                "pvalue": "G210D"
+            },
+            {
+                "price": 0,
+                "value": "2d0052",
+                "name": "紫色",
+                "pvalue": "P107D"
+            }
+        ],
+        "baobianbu": [
+            {
+                "price": 0,
+                "value": "0a0a0a",
+                "name": "黑色",
+                "pvalue": "B101B"
+            },
+            {
+                "price": 0,
+                "value": "4270b7",
+                "name": "海蓝",
+                "pvalue": "B204B"
+            },
+            {
+                "price": 0,
+                "value": "b91a26",
+                "name": "大红",
+                "pvalue": "R101B"
+            },
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101B"
+            },
+            {
+                "price": 0,
+                "value": "e7fb70",
+                "name": "荧光黄",
+                "pvalue": "Y101B"
+            },
+            {
+                "price": 0,
+                "value": "c7c7c7",
+                "name": "浅灰",
+                "pvalue": "G103B"
+            },
+            {
+                "price": 0,
+                "value": "008f37",
+                "name": "翠绿",
+                "pvalue": "G210B"
+            },
+            {
+                "price": 0,
+                "value": "2d0052",
+                "name": "紫色",
+                "pvalue": "P107B"
+            }
+        ]
+    },
+    "sizeMes": {
+        "baseSize": 41,
+        "pengzhang": "1.0172",
+        "width": 262.4,
+        "height": 279
+    },
+    "sizeRange": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+    ],
+    "pattern": "M9101",
+    "huawenFlag": true,
+    "sucaiFlag": true,
+    "qr": {
+        "topvxieshe": "qrtopvxieshe.png",
+        "leftvxieshe": "qrleftvxieshe.png",
+        "rightvxieshe": "qrrightvxieshe.png",
+        "rightvyouhou": "qrrightvyouhou.png"
+    },
+    "relation": {
+        "top": {
+            "sc": 1.2071,
+            "x": -187,
+            "y": -28,
+            "ro": -1.449
+        },
+        "left": {
+            "sc": 0.9004,
+            "x": -21,
+            "y": 585,
+            "ro": 608.5489
+        },
+        "backplus": {
+            "sc": 1.1076,
+            "x": 1222,
+            "y": -376,
+            "ro": 94.8719
+        },
+        "back": {
+            "sc": 1.4304,
+            "x": -642,
+            "y": 817,
+            "ro": -113.1716
+        },
+        "right": {
+            "sc": 0.7717,
+            "x": 752,
+            "y": 28,
+            "ro": -245.6076
+        }
+    }
+}

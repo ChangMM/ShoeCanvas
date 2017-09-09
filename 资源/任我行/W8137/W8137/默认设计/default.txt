@@ -1,0 +1,21 @@
+﻿{
+        "img" : {
+            "top" : "top.png",
+            "left" : "left.png",
+            "bottom" : "bottom.png",
+            "back" : "back.png",
+            "right" : "right.png"
+        },
+        "color" : {
+            "zhidai": {
+            		 
+               "price": 0,
+                "value": "0a0a0a",
+                "name": "黑色",
+                "pvalue": "B101D"
+        	        }
+        },
+        "qrposition" : "0",
+       "comfort" : "偏柔",
+	"huawen":"B101A"
+    }

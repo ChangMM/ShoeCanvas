@@ -1,0 +1,25 @@
+﻿{
+        "img" : {
+             "top" : "Top.png",
+            "left" : "Left.png",
+            "bottom" :"Bottom.png",
+            "back" : "Back.png",
+            "right" : "Right.png"
+        },
+        "color" : {
+             "zhidai": {
+            		"value": "fdc5dd",
+           		"price": 0,
+            		"name": "粉红",
+            		"pvalue": "R105D"
+        	        },
+          "baobianbu": {
+            		"value": "fdc5dd",
+            		"price": 0,
+            		"name": "粉红",
+            		"pvalue": "R105B"
+        	        }
+        },
+        "qrposition" : "0",
+        "comfort" : "偏柔"
+    }

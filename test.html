@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="">
+      <p>Example shifting color Hue with .getImageData</p>
+      <p>(Original: left, Recolored: right)</p>
+      <canvas id="canvas" width=300 height=300></canvas>
+    </div>
+    <script type="text/javascript">
+    var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var img = new Image();
+img.crossOrigin = "anonymous";
+img.onload = start;
+img.src = "./src/assets/mask/tidai.png";
+
+function start() {
+  ctx.drawImage(img, 0, 0);
+  ctx.drawImage(img, 150, 0);
+  recolorPants(-.33);
+}
+
+
+
+    </script>
+  </body>
+</html>

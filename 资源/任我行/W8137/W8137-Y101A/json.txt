@@ -1,0 +1,6 @@
+{
+    "top": "top.png",
+    "left": "left.png",
+    "right": "right.png",
+    "back": "back.png"
+}

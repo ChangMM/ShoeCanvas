@@ -1,0 +1,197 @@
+﻿{
+    "image": {
+        "product": "product.png",
+        "backmask": "backmask.png",
+        "bottom": "bottom.png",
+        "back": "back.png",
+        "right": "right.png",
+        "leftmask": "leftmask.png",
+        "rightmask": "rightmask.png",
+        "top": "top.png",
+        "left": "left.png",
+        "topmask": "topmask.png",
+        "user": "user.png",
+        "zhidai": {
+            "top": "topvzhidai.png",
+            "left": "leftvzhidai.png",
+            "back": "backvzhidai.png",
+            "right": "rightvzhidai.png"
+        },
+        "baobianbu": {
+            "top": "topvbaobianbu.png",
+            "left": "leftvbaobianbu.png",
+            "back": "backvbaobianbu.png",
+            "right": "rightvbaobianbu.png"
+        },
+        "defaultProduct": "product.jpg"
+    },
+    "color": {
+        "zhidai": [
+            {
+                "price": 0,
+                "value": "aecefb",
+                "name": "浅月色",
+                "pvalue": "M102D"
+            },
+            {
+                "price": 0,
+                " name": "黑色",
+                "pvalue": "B101D",
+                "value": "0a0a0a"
+            },
+            {
+                "price": 0,
+                "value": "b5a1e9",
+                "name": "浅紫",
+                "pvalue": "P104D"
+            },
+            {
+                "price": 0,
+                "value": "fdc5dd",
+                "name": "粉红",
+                "pvalue": "R105D"
+            },
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101D"
+            },
+            {
+                "price": 0,
+                "value": "ed4f9a",
+                "name": "玫红",
+                "pvalue": "R108D"
+            },
+            {
+                "price": 0,
+                "value": "b91a26",
+                "name": "大红",
+                "pvalue": "R101D"
+            },
+            {
+                "price": 0,
+                "value": "1689e4",
+                "name": "天蓝",
+                "pvalue": "B207D"
+            },
+            {
+                "price": 0,
+                "value": "e7fb70",
+                "name": "荧光黄",
+                "pvalue": "Y101D"
+            }
+        ],
+        "baobianbu": [
+            {
+                "price": 0,
+                "value": "aecefb",
+                "name": "浅月色",
+                "pvalue": "M102B"
+            },
+            {
+                "price": 0,
+                "value": "b5a1e9",
+                "name": "浅紫",
+                "pvalue": "P104B"
+            },
+            {
+                "price": 0,
+                "value": "fdc5dd",
+                "name": "粉红",
+                "pvalue": "R105B"
+            },
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101B"
+            },
+            {
+                "price": 0,
+                "name": "黑色",
+                "pvalue": "B101D",
+                "value": "0a0a0a"
+            },
+            {
+                "price": 0,
+                "value": "ed4f9a",
+                "name": "玫红",
+                "pvalue": "R108B"
+            },
+            {
+                "price": 0,
+                "value": "b91a26",
+                "name": "大红",
+                "pvalue": "R101B"
+            },
+            {
+                "price": 0,
+                "value": "1689e4",
+                "name": "天蓝",
+                "pvalue": "B207B"
+            },
+            {
+                "price": 0,
+                "value": "e7fb70",
+                "name": "荧光黄",
+                "pvalue": "Y101B"
+            }
+        ]
+    },
+    "sizeMes": {
+        "baseSize": 36,
+        "pengzhang": "1.0161",
+        "width": 237.2,
+        "height": 246.5
+    },
+    "sizeRange": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+    ],
+    "pattern": "W8103",
+    "huawenFlag": true,
+    "sucaiFlag": true,
+    "qr": {
+        "topvxieshe": "qrtopvxieshe.png",
+        "leftvxieshe": "qrleftvxieshe.png",
+        "rightvxieshe": "qrrightvxieshe.png",
+        "rightvyouhou": "qrrightvyouhou.png"
+    },
+    "relation": {
+        "top": {
+            "sc": 1.4158,
+            "x": -215,
+            "y": -51,
+            "ro": -0.7499
+        },
+        "left": {
+            "sc": 1.2697,
+            "x": -103,
+            "y": 725,
+            "ro": 601.9803
+        },
+        "backplus": {
+            "sc": 1.2515,
+            "x": 1217,
+            "y": -413,
+            "ro": 94.4254
+        },
+        "back": {
+            "sc": 1.5565,
+            "x": -820,
+            "y": 482,
+            "ro": -93.4172
+        },
+        "right": {
+            "sc": 0.9878,
+            "x": 840,
+            "y": -39,
+            "ro": 113.5429
+        }
+    }
+}

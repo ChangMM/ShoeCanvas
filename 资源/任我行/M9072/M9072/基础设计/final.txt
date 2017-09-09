@@ -1,0 +1,124 @@
+﻿{
+    "image": {
+        "bottom": "bottom.png",
+        "back": "back.png",
+        "right": "right.png",
+        "top": "top.png",
+        "left": "left.png",
+        "zhidai": {
+            "top": "topvzhidai.png",
+            "left": "leftvzhidai.png",
+            "back": "backvzhidai.png",
+            "right": "rightvzhidai.png"
+        },
+        "baobianbu": {
+            "top": "topvbaobianbu.png",
+            "left": "leftvbaobianbu.png",
+            "back": "backvbaobianbu.png",
+            "right": "rightvbaobianbu.png"
+        }
+    },
+    "color": {
+        "zhidai": [
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101D"
+            },
+            {
+                "price": 0,
+                "value": "32343c",
+                "name": "炭灰",
+                "pvalue": "G104D"
+            },
+            {
+                "price": 0,
+                "value": "1c3ba1",
+                "name": "宝蓝",
+                "pvalue": "B203D"
+            },
+            {
+                "price": 0,
+                "value": "000c2e",
+                "name": "深蓝",
+                "pvalue": "B201D"
+            }
+        ],
+        "baobianbu": [
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101B"
+            },
+            {
+                "price": 0,
+                "value": "32343c",
+                "name": "炭灰",
+                "pvalue": "G104B"
+            },
+            {
+                "price": 0,
+                "value": "1c3ba1",
+                "name": "宝蓝",
+                "pvalue": "B203B"
+            },
+            {
+                "price": 0,
+                "value": "000c2e",
+                "name": "深蓝",
+                "pvalue": "B201B"
+            }
+        ]
+    },
+    "sizeRange": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+    ],
+    "pattern": "M9072",
+    "huawenFlag": true,
+    "sucaiFlag": false,
+    "qr": {
+        "topvxieshe": "qrtopvxieshe.png",
+        "leftvxieshe": "qrleftvxieshe.png",
+        "rightvxieshe": "qrrightvxieshe.png",
+        "rightvyouhou": "qrrightvyouhou.png"
+    },
+    "relation": {
+        "top": {
+            "sc": 0,
+            "x": 0,
+            "y": 0,
+            "ro": 0
+        },
+        "left": {
+            "sc": 0,
+            "x": 0,
+            "y": 0,
+            "ro": 0
+        },
+        "backplus": {
+            "sc": 0,
+            "x": 0,
+            "y": 0,
+            "ro": 0
+        },
+        "back": {
+            "sc": 0,
+            "x": 0,
+            "y": 0,
+            "ro": 0
+        },
+        "right": {
+            "sc": 0,
+            "x": 0,
+            "y": 0,
+            "ro": 0
+        }
+    }
+}

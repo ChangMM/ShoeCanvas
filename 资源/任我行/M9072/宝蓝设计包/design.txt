@@ -1,0 +1,23 @@
+﻿{
+    "patternId": "PT0001392854069427307400",
+    "img": {
+        "top": "top.jpg",
+        "left": "left.jpg",
+        "bottom": "bottom.jpg",
+        "back": "back.jpg",
+        "right": "right.jpg"
+    },
+    "color": {
+        "zhidai": {
+            "price": 0,
+            "value": "1c3ba1",
+            "name": "宝蓝",
+            "pvalue": "B203D"
+        }
+    },
+    "qrposition": "0",
+    "comfort": "偏柔",
+    "sucai": [
+        "RS0001392854149480055565"
+    ]
+}

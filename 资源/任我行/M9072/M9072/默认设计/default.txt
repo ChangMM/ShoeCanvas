@@ -1,0 +1,26 @@
+﻿{
+        "img" : {
+            "top" : "top.png",
+            "left" : "left.png",
+            "bottom" : "bottom.png",
+            "back" : "back.png",
+            "right" : "right.png"
+        },
+        "color" : {
+            "zhidai": {
+            		 "price": 0,
+                         "value": "ffffff",
+                         "name": "白色",
+                         "pvalue": "W101D"
+        	        },
+               "baobianbu": {
+            		 "price": 0,
+                         "value": "ffffff",
+                         "name": "白色",
+                         "pvalue": "W101B"
+        	        }  
+        },
+        "qrposition" : "0",
+         "comfort" : "偏柔",
+	"huawen":"W101A"
+    }

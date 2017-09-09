@@ -1,0 +1,248 @@
+﻿{
+    "image": {
+        "product": "product.png",
+        "backmask": "backmask.png",
+        "bottom": "bottom.png",
+        "back": "back.png",
+        "right": "right.png",
+        "leftmask": "leftmask.png",
+        "rightmask": "rightmask.png",
+        "top": "top.png",
+        "left": "left.png",
+        "topmask": "topmask.png",
+        "user": "user.png",
+        "zhidai": {
+            "top": "topvzhidai.png",
+            "left": "leftvzhidai.png",
+            "back": "backvzhidai.png",
+            "right": "rightvzhidai.png"
+        },
+        "baobianbu": {
+            "top": "topvbaobianbu.png",
+            "left": "leftvbaobianbu.png",
+            "back": "backvbaobianbu.png",
+            "right": "rightvbaobianbu.png"
+        },
+         "defaultProduct": "product.jpg"
+    },
+    "color": {
+        "zhidai":[
+             
+            {
+                "price": 0,
+                "value": "5e3030",
+                "name": "咖啡",
+                "pvalue": "C101D"
+            },
+            {
+                "price": 0,
+                "value": "000c2e",
+                "name": "深蓝",
+                "pvalue": "B201D"
+            },
+            {
+                "price": 0,
+                "value": "b91a26",
+                "name": "大红",
+                "pvalue": "R101D"
+            },
+            {
+                "price": 0,
+                "value": "195fbe",
+                "name": "深天蓝",
+                "pvalue": "B209D"
+            },
+            {
+                "price": 0,
+                "value": "74767a",
+                "name": "中灰",
+                "pvalue": "G102D"
+            },
+            {
+                "price": 0,
+                "value": "181c5c",
+                "name": "深藏青",
+                "pvalue": "D101D"
+            },
+            {
+                "price": 0,
+                "value": "0a0a0a",
+                "name": "黑色",
+                "pvalue": "B101D"
+            },
+            {
+                "price": 0,
+                "value": "121691",
+                "name": "深宝蓝",
+                "pvalue": "B202D"
+            },
+            {
+                "price": 0,
+                "value": "e7fb70",
+                "name": "荧光黄",
+                "pvalue": "Y101D"
+            },
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101D"
+            },
+            {
+                "price": 0,
+                "value": "ff4691",
+                "name": "亮玫红",
+                "pvalue": "R107D"
+            },
+            {
+                "price": 0,
+                "value": "912ea7",
+                "name": "紫色",
+                "pvalue": "P107D"
+            },
+             {
+                "price": 0,
+                "value": "008f37",
+                "name": "翠绿",
+                "pvalue": "G210D"
+            }
+        ],
+        "baobianbu": [
+             
+            {
+                "price": 0,
+                "value": "5e3030",
+                "name": "咖啡",
+                "pvalue": "C101B"
+            },
+            {
+                "price": 0,
+                "value": "000c2e",
+                "name": "深蓝",
+                "pvalue": "B201B"
+            },
+            {
+                "price": 0,
+                "value": "b91a26",
+                "name": "大红",
+                "pvalue": "R101B"
+            },
+            {
+                "price": 0,
+                "value": "195fbe",
+                "name": "深天蓝",
+                "pvalue": "B209B"
+            },
+            {
+                "price": 0,
+                "value": "74767a",
+                "name": "中灰",
+                "pvalue": "G102B"
+            },
+            {
+                "price": 0,
+                "value": "181c5c",
+                "name": "深藏青",
+                "pvalue": "D101B"
+            },
+            {
+                "price": 0,
+                "value": "0a0a0a",
+                "name": "黑色",
+                "pvalue": "B101B"
+            },
+            {
+                "price": 0,
+                "value": "121691",
+                "name": "深宝蓝",
+                "pvalue": "B202B"
+            },
+            {
+                "price": 0,
+                "value": "e7fb70",
+                "name": "荧光黄",
+                "pvalue": "Y101B"
+            },
+            {
+                "price": 0,
+                "value": "ffffff",
+                "name": "白色",
+                "pvalue": "W101B"
+            },
+            {
+                "price": 0,
+                "value": "ff4691",
+                "name": "亮玫红",
+                "pvalue": "R107B"
+            },
+            {
+                "price": 0,
+                "value": "912ea7",
+                "name": "紫色",
+                "pvalue": "P107B"
+            },
+             {
+                "price": 0,
+                "value": "008f37",
+                "name": "翠绿",
+                "pvalue": "G210B"
+            }
+        ]
+    },
+	"sizeMes":{
+		"baseSize":31,
+		"pengzhang":"1.0152",
+                "width":207.65,
+                "height":208.07
+},
+    "sizeRange": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+    ],
+    "pattern": "K6108",
+    "huawenFlag": true,
+    "sucaiFlag": true,
+    "qr": {
+        "topvxieshe": "qrtopvxieshe.png",
+        "leftvxieshe": "qrleftvxieshe.png",
+        "rightvxieshe": "qrrightvxieshe.png",
+        "rightvyouhou": "qrrightvyouhou.png"
+    },
+     "relation": {
+        "top": {
+            "sc": 1.5994,
+            "x": -228,
+            "y": -37,
+            "ro": -1.4434
+        },
+        "left": {
+            "sc": 1.2272,
+            "x": -9,
+            "y": 638,
+            "ro": 602.1821
+        },
+        "backplus": {
+            "sc": 1.1883,
+            "x": 1038,
+            "y": -272,
+            "ro": 95.7061
+        },
+        "back": {
+            "sc": 1.2659,
+            "x": -470,
+            "y": 487,
+            "ro": -98.6679
+        },
+        "right": {
+            "sc": 0.9478,
+            "x": 734,
+            "y": 28,
+            "ro": -244.5584
+        }
+    }
+}
