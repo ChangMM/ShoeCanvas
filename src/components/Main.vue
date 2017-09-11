@@ -7,45 +7,15 @@
         <canvas id="tidai-canvas" class="canvas-show"></canvas>
         <canvas id="lingkou-canvas" class="canvas-show"></canvas>
         <canvas id="mask-canvas" class="canvas-show"></canvas>
-        <!-- <div class="direction" v-if="m_index == 1">
-          <img src="../assets/mask/up.png" alt="">
-        </div>
-        <div class="direction direction-top" v-if="m_index == 2">
-          <img src="../assets/top/shoe.png" alt="">
-          <img src="../assets/top/mask.png" alt="">
-          <img src="../assets/top/lingkou.png" alt="">
-          <img src="../assets/top/tidai.png" alt="">
-        </div>
-        <div class="direction direction-left" v-if="m_index == 3">
-          <img src="../assets/left/shoe.png" alt="">
-          <img src="../assets/left/mask.png" alt="">
-          <img src="../assets/left/lingkou.png" alt="">
-          <img src="../assets/left/tidai.png" alt="">
-        </div>
-        <div class="direction direction-right" v-if="m_index == 4">
-          <img src="../assets/right/shoe.png" alt="">
-          <img src="../assets/right/mask.png" alt="">
-          <img src="../assets/right/lingkou.png" alt="">
-          <img src="../assets/right/tidai.png" alt="">
-        </div>
-        <div class="direction direction-back" v-if="m_index == 5">
-          <img src="../assets/back/shoe.png" alt="">
-          <img src="../assets/back/mask.png" alt="">
-          <img src="../assets/back/lingkou.png" alt="">
-          <img src="../assets/back/tidai.png" alt="">
-        </div>
-        <div class="direction direction-bottom" v-if="m_index == 6">
-          <img src="../assets/bottom.png" alt="">
-        </div> -->
       </div>
     </div>
     <div class="tools-wrap">
-      <span class="tool-item item1" :class="{'active': m_index == 1}" v-on:click='f_choose_index(1)'></span>
-      <span class="tool-item item2" :class="{'active': m_index == 2}" v-on:click='f_choose_index(2)'></span>
-      <span class="tool-item item3" :class="{'active': m_index == 3}" v-on:click='f_choose_index(3)'></span>
-      <span class="tool-item item4" :class="{'active': m_index == 4}" v-on:click='f_choose_index(4)'></span>
-      <span class="tool-item item5" :class="{'active': m_index == 5}" v-on:click='f_choose_index(5)'></span>
-      <span class="tool-item item6" :class="{'active': m_index == 6}" v-on:click='f_choose_index(6)'></span>
+      <span class="tool-item item1" :class="{'active': m_config.direction == 'up'}" v-on:click='f_choose_direction("up")'></span>
+      <span class="tool-item item2" :class="{'active': m_config.direction == 'top'}" v-on:click='f_choose_direction("top")'></span>
+      <span class="tool-item item3" :class="{'active': m_config.direction == 'left'}" v-on:click='f_choose_direction("left")'></span>
+      <span class="tool-item item4" :class="{'active': m_config.direction == 'right'}" v-on:click='f_choose_direction("right")'></span>
+      <span class="tool-item item5" :class="{'active': m_config.direction == 'back'}" v-on:click='f_choose_direction("back")'></span>
+      <span class="tool-item item6" :class="{'active': m_config.direction == 'bottom'}" v-on:click='f_choose_direction("bottom")'></span>
     </div>
     <div class="type-wrap clearfix">
       <span class="type-item" :class="{'active': m_type == 1}" v-on:click='f_choose_type(1)'>鞋面</span>
@@ -54,11 +24,26 @@
       <span class="type-item" :class="{'active': m_type == 4}" v-on:click='f_choose_type(4)'>二维码</span>
     </div>
     <div class="type-content">
+      <div class="sucai-wrap" v-show="m_type == 1">
+        <img src="../assets/material/material-1.jpg" class="active sucai-item" alt="">
+        <img src="../assets/material/material-2.jpg" class="sucai-item" alt="">
+        <img src="../assets/material/material-3.jpg" class="sucai-item" alt="">
+        <img src="../assets/material/material-4.jpg" class="sucai-item" alt="">
+        <img src="../assets/material/material-5.jpg" class="sucai-item" alt="">
+        <img src="../assets/material/material-1.jpg" class="sucai-item" alt="">
+        <img src="../assets/material/material-2.jpg" class="sucai-item" alt="">
+        <img src="../assets/material/material-3.jpg" class="sucai-item" alt="">
+      </div>
       <div class="color-wrap" v-show="m_type == 2">
         <span class="color-item" v-for='item,index in m_color' :style="'background:-webkit-linear-gradient(-60deg,#fff,#'+ item.value +');'" v-on:click="f_set_tidai_color(item.value)"></span>
       </div>
       <div class="color-wrap" v-show="m_type == 3">
         <span class="color-item" v-for='item,index in m_color' :style="'background:-webkit-linear-gradient(-60deg,#fff,#'+ item.value +');'" v-on:click="f_set_lingkou_color(item.value)"></span>
+      </div>
+      <div class="qrcode-wrap" v-show="m_type == 4">
+        <img src="../assets/icons/qr_top.jpg" class="active qrcode-item" alt="">
+        <img src="../assets/icons/qr_side.jpg" class="qrcode-item" alt="">
+        <img src="../assets/icons/qr_no.jpg" class="qrcode-item" alt="">
       </div>
     </div>
     <div class="material-wrap clearfix">
@@ -81,7 +66,7 @@ export default {
       m_canvas_height: 0,
       m_canvas_width: 0,
       m_index: 1,
-      m_type: 2,
+      m_type: 1,
       m_material: 1,
       m_shoe_canvas: null,
       m_lingkou_canvas: null,
@@ -136,27 +121,39 @@ export default {
       this.m_origin_lingkou_canvas.height = this.m_canvas_height
       this.m_origin_lingkou_canvas.width = this.m_canvas_width
     },
+    f_clear_canvas () {
+      this.m_shoe_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_lingkou_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_mask_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_tidai_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_origin_tidai_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_origin_mask_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_origin_lingkou_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+    },
     f_set_config () {
-      switch (this.m_config.direction) {
-        case 'top':
-          this.f_set_image(this.m_shoe_canvas, require('../assets/top/shoe.png'))
-          this.f_set_image(this.m_mask_canvas, require('../assets/top/mask.png'))
-          this.f_set_image(this.m_tidai_canvas, require('../assets/top/tidai.png'), () => {
-            if (this.m_config.tidai_color !== '') {
-              this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_tidai_canvas, this.m_config.tidai_color), 0, 0)
-            }
-          })
-          this.f_set_image(this.m_lingkou_canvas, require('../assets/top/lingkou.png'), () => {
-            if (this.m_config.lingkou_color !== '') {
-              this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
-            }
-          })
-          this.f_set_image(this.m_origin_mask_canvas, require('../assets/top/mask.png'))
-          this.f_set_image(this.m_origin_tidai_canvas, require('../assets/top/tidai.png'))
-          this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/top/lingkou.png'))
-          break;
-        default:
+      if (this.m_config.direction === 'up') {
+          this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '.png'))
+          this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '.png'))
+      } else if (this.m_config.direction === 'bottom') {
+        this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '.png'))
+      } else {
+        this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '/shoe.png'))
+        this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'))
+        this.f_set_image(this.m_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'), () => {
+          if (this.m_config.tidai_color !== '') {
+            this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_tidai_canvas, this.m_config.tidai_color), 0, 0)
+          }
+        })
+        this.f_set_image(this.m_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'), () => {
+          if (this.m_config.lingkou_color !== '') {
+            this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
+          }
+        })
+        this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'))
+        this.f_set_image(this.m_origin_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'))
+        this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'))
       }
+
     },
     f_set_image (canvas, src, callback) {
       let ctx = canvas.getContext('2d')
@@ -186,9 +183,6 @@ export default {
       }
       img.src = src
     },
-    f_set_canvas () {
-      let canvasPanel = document.getElement('#canvas')
-    },
     f_set_tidai_color (color) {
       this.m_config.tidai_color = color
       this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_origin_tidai_canvas, this.m_config.tidai_color), 0, 0)
@@ -197,8 +191,10 @@ export default {
       this.m_config.lingkou_color = color
       this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_origin_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
     },
-    f_choose_index (index) {
-      this.m_index = index
+    f_choose_direction (direction) {
+      this.m_config.direction = direction
+      this.f_clear_canvas()
+      this.f_set_config()
     },
     f_choose_type (type) {
       this.m_type = type
@@ -257,7 +253,6 @@ export default {
     border-bottom: 1px solid #ddd;
   }
   .canvas-panel-wrap{
-    margin-top: 10px;
     padding-left: 10%;
     padding-right: 10%;
     overflow: hidden;
@@ -366,25 +361,40 @@ export default {
     }
   }
   .type-content{
-    .color-wrap{
+    .color-wrap,.qrcode-wrap,.sucai-wrap{
       max-width: 100%;
       padding: 5px;
       white-space: nowrap;
       overflow-x: auto;
       overflow-y: hidden;
+      background-color: #f8f9fb;
       &::-webkit-scrollbar {
         width: 0px;
         height: 0px;
       }
       .color-item{
         display: inline-block;
-        height: 50px;
-        width: 50px;
+        height: 70px;
+        width: 70px;
         border-radius: 4px;
         margin-right: 10px;
         border: 1px solid #eee;
         &:last-child{
           margin-right: 0;
+        }
+      }
+      .qrcode-item,.sucai-item{
+        display: inline-block;
+        height: 70px;
+        width: 70px;
+        border-radius: 4px;
+        margin-right: 10px;
+        border: 1px solid #eee;
+        &:last-child{
+          margin-right: 0;
+        }
+        &.active{
+          border-color: #F08200;
         }
       }
     }
