@@ -9,55 +9,62 @@
         <canvas id="mask-canvas" class="canvas-show"></canvas>
       </div>
     </div>
-    <div class="tools-wrap">
-      <span class="tool-item item1" :class="{'active': m_config.direction == 'up'}" v-on:click='f_choose_direction("up")'></span>
-      <span class="tool-item item2" :class="{'active': m_config.direction == 'top'}" v-on:click='f_choose_direction("top")'></span>
-      <span class="tool-item item3" :class="{'active': m_config.direction == 'left'}" v-on:click='f_choose_direction("left")'></span>
-      <span class="tool-item item4" :class="{'active': m_config.direction == 'right'}" v-on:click='f_choose_direction("right")'></span>
-      <span class="tool-item item5" :class="{'active': m_config.direction == 'back'}" v-on:click='f_choose_direction("back")'></span>
-      <span class="tool-item item6" :class="{'active': m_config.direction == 'bottom'}" v-on:click='f_choose_direction("bottom")'></span>
-    </div>
-    <div class="type-wrap clearfix">
-      <span class="type-item" :class="{'active': m_type == 1}" v-on:click='f_choose_type(1)'>鞋面</span>
-      <span class="type-item" :class="{'active': m_type == 2}" v-on:click='f_choose_type(2)'>后提带</span>
-      <span class="type-item" :class="{'active': m_type == 3}" v-on:click='f_choose_type(3)'>领口</span>
-      <span class="type-item" :class="{'active': m_type == 4}" v-on:click='f_choose_type(4)'>二维码</span>
-    </div>
-    <div class="type-content">
-      <div class="sucai-wrap" v-show="m_type == 1">
-        <img src="../assets/material/material-1.jpg" class="active sucai-item" alt="">
-        <img src="../assets/material/material-2.jpg" class="sucai-item" alt="">
-        <img src="../assets/material/material-3.jpg" class="sucai-item" alt="">
-        <img src="../assets/material/material-4.jpg" class="sucai-item" alt="">
-        <img src="../assets/material/material-5.jpg" class="sucai-item" alt="">
-        <img src="../assets/material/material-1.jpg" class="sucai-item" alt="">
-        <img src="../assets/material/material-2.jpg" class="sucai-item" alt="">
-        <img src="../assets/material/material-3.jpg" class="sucai-item" alt="">
+    <div class="footer">
+      <div class="tools-wrap">
+        <span class="tool-item item1" :class="{'active': m_config.direction == 'up'}" v-on:click='f_choose_direction("up")'></span>
+        <span class="tool-item item2" :class="{'active': m_config.direction == 'top'}" v-on:click='f_choose_direction("top")'></span>
+        <span class="tool-item item3" :class="{'active': m_config.direction == 'left'}" v-on:click='f_choose_direction("left")'></span>
+        <span class="tool-item item4" :class="{'active': m_config.direction == 'right'}" v-on:click='f_choose_direction("right")'></span>
+        <span class="tool-item item5" :class="{'active': m_config.direction == 'back'}" v-on:click='f_choose_direction("back")'></span>
+        <span class="tool-item item6" :class="{'active': m_config.direction == 'bottom'}" v-on:click='f_choose_direction("bottom")'></span>
       </div>
-      <div class="color-wrap" v-show="m_type == 2">
-        <span class="color-item" v-for='item,index in m_color' :style="'background:-webkit-linear-gradient(-60deg,#fff,#'+ item.value +');'" v-on:click="f_set_tidai_color(item.value)"></span>
+      <div class="type-wrap clearfix">
+        <span class="type-item" :class="{'active': m_type == 1}" v-on:click='f_choose_type(1)'>鞋面</span>
+        <span class="type-item" :class="{'active': m_type == 2}" v-on:click='f_choose_type(2)'>后提带</span>
+        <span class="type-item" :class="{'active': m_type == 3}" v-on:click='f_choose_type(3)'>领口</span>
+        <span class="type-item" :class="{'active': m_type == 4}" v-on:click='f_choose_type(4)'>二维码</span>
       </div>
-      <div class="color-wrap" v-show="m_type == 3">
-        <span class="color-item" v-for='item,index in m_color' :style="'background:-webkit-linear-gradient(-60deg,#fff,#'+ item.value +');'" v-on:click="f_set_lingkou_color(item.value)"></span>
+      <div class="type-content">
+        <div class="img-wrap" v-show="m_type == 1">
+          <div class="img-item-wrap" v-for="item in m_images">
+            <img :src="item.src" class="img-item" alt="">
+            <p class="label">￥{{item.price}}</p>
+          </div>
+        </div>
+        <div class="color-wrap" v-show="m_type == 2">
+          <div class="color-item-wrap" v-for='item,index in m_color'>
+            <span class="color-item" :style="'background:-webkit-linear-gradient(-60deg,#fff,#'+ item.value +');'" v-on:click="f_set_tidai_color(item.value)"></span>
+            <p class="label">{{item.name}}</p>
+          </div>
+        </div>
+        <div class="color-wrap" v-show="m_type == 3">
+          <div class="color-item-wrap" v-for='item,index in m_color'>
+            <span class="color-item" :style="'background:-webkit-linear-gradient(-60deg,#fff,#'+ item.value +');'" v-on:click="f_set_lingkou_color(item.value)"></span>
+            <p class="label">{{item.name}}</p>
+          </div>
+        </div>
+        <div class="img-wrap" v-show="m_type == 4">
+          <div class="img-item-wrap" v-for="item in m_qrcode_images">
+            <img :src="item" class="img-item" alt="">
+            <p class="label">向上</p>
+          </div>
+        </div>
       </div>
-      <div class="qrcode-wrap" v-show="m_type == 4">
-        <img src="../assets/icons/qr_top.jpg" class="active qrcode-item" alt="">
-        <img src="../assets/icons/qr_side.jpg" class="qrcode-item" alt="">
-        <img src="../assets/icons/qr_no.jpg" class="qrcode-item" alt="">
+      <div class="material-wrap clearfix">
+        <span class="material-item" :class="{'active': m_material == 1}" v-on:click='f_choose_material(1)'>素材</span>
+        <span class="material-item" :class="{'active': m_material == 2}" v-on:click='f_choose_material(2)'>付费</span>
+        <span class="material-item" :class="{'active': m_material == 3}" v-on:click='f_choose_material(3)'>花纹</span>
+        <span class="material-item" :class="{'active': m_material == 4}" v-on:click='f_choose_material(4)'>上传</span>
       </div>
     </div>
-    <div class="material-wrap clearfix">
-      <span class="material-item" :class="{'active': m_material == 1}" v-on:click='f_choose_material(1)'>素材</span>
-      <span class="material-item" :class="{'active': m_material == 2}" v-on:click='f_choose_material(2)'>付费</span>
-      <span class="material-item" :class="{'active': m_material == 3}" v-on:click='f_choose_material(3)'>花纹</span>
-      <span class="material-item" :class="{'active': m_material == 4}" v-on:click='f_choose_material(4)'>上传</span>
-    </div>
+
   </div>
 </template>
 
 <script>
 import Utils from '../Utils'
 import Color from '../Color'
+import Image from '../Images'
 import R from 'ramda'
 export default {
   name: 'main',
@@ -76,6 +83,12 @@ export default {
       m_origin_tidai_canvas: null,
       m_origin_mask_canvas: null,
       m_color: Color,
+      m_images: Image,
+      m_qrcode_images: [
+        require('../assets/icons/qr_top.jpg'),
+        require('../assets/icons/qr_side.jpg'),
+        require('../assets/icons/qr_no.jpg')
+      ],
       m_config: {
         direction: 'top',
         tidai_color: '',
@@ -157,7 +170,7 @@ export default {
     },
     f_set_image (canvas, src, callback) {
       let ctx = canvas.getContext('2d')
-      let img = new Image()
+      let img = document.createElement('img')
       img.onload = () => {
         let width = img.width
         let height = img.height
@@ -232,10 +245,27 @@ export default {
           continue
         }
         HSL = Utils.Rgb2Hsl(red, green, blue)
-        RGB = Utils.Hsl2Rgb(filterH[0], filterH[1], HSL[2] - 0.2)
-        data[i + 0] = RGB[0]
-        data[i + 1] = RGB[1]
-        data[i +2] = RGB[2]
+        if (filterH[0] == HSL[0] && filterH[1] == HSL[1]) {
+          if (filterH[2] < 0.2) {
+            // 黑色的
+            RGB = Utils.Hsl2Rgb(filterH[0], filterH[1], HSL[2] - 0.6)
+            data[i + 0] = RGB[0]
+            data[i + 1] = RGB[1]
+            data[i +2] = RGB[2]
+          } else {
+            continue
+          }
+        } else {
+          // 颜色的对比度过高 比如黄色需要调整下
+          if (filterH[1] > 0.8) {
+            RGB = Utils.Hsl2Rgb(filterH[0], filterH[1] - 0.2, HSL[2] - 0.2)
+          } else {
+            RGB = Utils.Hsl2Rgb(filterH[0], filterH[1], HSL[2] - 0.2)
+          }
+          data[i + 0] = RGB[0]
+          data[i + 1] = RGB[1]
+          data[i +2] = RGB[2]
+        }
       }
       callback && callback (imgData)
       return imgData
@@ -245,18 +275,35 @@ export default {
 </script>
 <style scoped lang="scss">
 .main{
+  height: 100%;
+  position: relative;
+  padding-top: 41px;
+  box-sizing: border-box;
+  padding-bottom: 240px;
   .header{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
     height: 40px;
+    font-size: 16px;
     line-height: 40px;
     text-align: center;
-    font-size: 16px;
     border-bottom: 1px solid #ddd;
+  }
+  .footer{
+    position: absolute;
+    left:0;
+    bottom: 0;
+    width: 100%;
   }
   .canvas-panel-wrap{
     padding-left: 10%;
     padding-right: 10%;
     overflow: hidden;
     position: relative;
+    top:50%;
+    transform: translateY(-50%);
     &:after {
       content: '';
       display: block;
@@ -348,8 +395,8 @@ export default {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     .type-item,.material-item{
-      height: 30px;
-      line-height: 30px;
+      height: 40px;
+      line-height: 40px;
       display: inline-block;
       text-align: center;
       width: 25%;
@@ -361,40 +408,54 @@ export default {
     }
   }
   .type-content{
-    .color-wrap,.qrcode-wrap,.sucai-wrap{
+    .color-wrap,.img-wrap{
       max-width: 100%;
       padding: 5px;
       white-space: nowrap;
       overflow-x: auto;
       overflow-y: hidden;
       background-color: #f8f9fb;
+      font-size: 0;
       &::-webkit-scrollbar {
         width: 0px;
         height: 0px;
       }
-      .color-item{
+      .color-item-wrap{
         display: inline-block;
-        height: 70px;
-        width: 70px;
-        border-radius: 4px;
-        margin-right: 10px;
-        border: 1px solid #eee;
+        margin-right: 6px;
         &:last-child{
           margin-right: 0;
+        }
+        width: 80px;
+        .color-item{
+          display: inline-block;
+          height: 80px;
+          width: 100%;
+          border-radius: 4px;
+          border: 1px solid #eee;
+          box-sizing: border-box;
         }
       }
-      .qrcode-item,.sucai-item{
+      .label{
+        font-size: 12px;
+        text-align: center;
+      }
+      .img-item-wrap{
+        width: 80px;
+        margin-right: 6px;
         display: inline-block;
-        height: 70px;
-        width: 70px;
-        border-radius: 4px;
-        margin-right: 10px;
-        border: 1px solid #eee;
         &:last-child{
           margin-right: 0;
         }
-        &.active{
-          border-color: #F08200;
+        .img-item{
+          height: 80px;
+          border-radius: 4px;
+          display: inline-block;
+          border: 1px solid #eee;
+          box-sizing: border-box;
+          &.active{
+            border-color: #F08200;
+          }
         }
       }
     }
