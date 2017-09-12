@@ -57,7 +57,7 @@
         <span class="material-item" :class="{'active': m_material == 4}" v-on:click='f_choose_material(4)'>上传</span>
       </div>
     </div>
-
+    <Material class="material-mask"></Material>
   </div>
 </template>
 
@@ -65,6 +65,7 @@
 import Utils from '../Utils'
 import Color from '../Color'
 import Image from '../Images'
+import Material from './Material.vue'
 import R from 'ramda'
 export default {
   name: 'main',
@@ -100,6 +101,9 @@ export default {
   mounted() {
     this.f_init_canvas()
     this.f_set_config()
+  },
+  components: {
+    Material
   },
   methods: {
     f_init_canvas () {
@@ -296,6 +300,126 @@ export default {
     left:0;
     bottom: 0;
     width: 100%;
+    .tools-wrap{
+      margin-top: 15px;
+      text-align: center;
+      .tool-item{
+        margin-right: 8px;
+        display: inline-block;
+        height: 25px;
+        width: 25px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        &:last-child{
+          margin-right: 0;
+        }
+        &.item1{
+          background-image: url('../assets/icons/icon-1.png');
+        }
+        &.item1.active{
+          background-image: url('../assets/icons/icon-1-hover.png');
+        }
+        &.item2{
+          background-image: url('../assets/icons/icon-2.png');
+        }
+        &.item2.active{
+          background-image: url('../assets/icons/icon-2-hover.png');
+        }
+        &.item3{
+          background-image: url('../assets/icons/icon-3.png');
+        }
+        &.item3.active{
+          background-image: url('../assets/icons/icon-3-hover.png');
+        }
+        &.item4{
+          background-image: url('../assets/icons/icon-4.png');
+        }
+        &.item4.active{
+          background-image: url('../assets/icons/icon-4-hover.png');
+        }
+        &.item5{
+          background-image: url('../assets/icons/icon-5.png');
+        }
+        &.item5.active{
+          background-image: url('../assets/icons/icon-5-hover.png');
+        }
+        &.item6{
+          background-image: url('../assets/icons/icon-6.png');
+        }
+        &.item6.active{
+          background-image: url('../assets/icons/icon-6-hover.png');
+        }
+      }
+    }
+    .type-wrap,.material-wrap{
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      .type-item,.material-item{
+        height: 40px;
+        line-height: 40px;
+        display: inline-block;
+        text-align: center;
+        width: 25%;
+        float: left;
+        cursor:pointer;
+        &.active{
+          color: #F08200;
+        }
+      }
+    }
+    .type-content{
+      .color-wrap,.img-wrap{
+        max-width: 100%;
+        padding: 5px;
+        white-space: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        background-color: #f8f9fb;
+        font-size: 0;
+        &::-webkit-scrollbar {
+          width: 0px;
+          height: 0px;
+        }
+        .color-item-wrap{
+          display: inline-block;
+          margin-right: 6px;
+          &:last-child{
+            margin-right: 0;
+          }
+          width: 80px;
+          .color-item{
+            display: inline-block;
+            height: 80px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            box-sizing: border-box;
+          }
+        }
+        .label{
+          font-size: 12px;
+          text-align: center;
+        }
+        .img-item-wrap{
+          width: 80px;
+          margin-right: 6px;
+          display: inline-block;
+          &:last-child{
+            margin-right: 0;
+          }
+          .img-item{
+            height: 80px;
+            border-radius: 4px;
+            display: inline-block;
+            border: 1px solid #eee;
+            box-sizing: border-box;
+            &.active{
+              border-color: #F08200;
+            }
+          }
+        }
+      }
+    }
   }
   .canvas-panel-wrap{
     padding-left: 10%;
@@ -340,125 +464,14 @@ export default {
       }
     }
   }
-  .tools-wrap{
-    margin-top: 15px;
-    text-align: center;
-    .tool-item{
-      margin-right: 8px;
-      display: inline-block;
-      height: 25px;
-      width: 25px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      &:last-child{
-        margin-right: 0;
-      }
-      &.item1{
-        background-image: url('../assets/icons/icon-1.png');
-      }
-      &.item1.active{
-        background-image: url('../assets/icons/icon-1-hover.png');
-      }
-      &.item2{
-        background-image: url('../assets/icons/icon-2.png');
-      }
-      &.item2.active{
-        background-image: url('../assets/icons/icon-2-hover.png');
-      }
-      &.item3{
-        background-image: url('../assets/icons/icon-3.png');
-      }
-      &.item3.active{
-        background-image: url('../assets/icons/icon-3-hover.png');
-      }
-      &.item4{
-        background-image: url('../assets/icons/icon-4.png');
-      }
-      &.item4.active{
-        background-image: url('../assets/icons/icon-4-hover.png');
-      }
-      &.item5{
-        background-image: url('../assets/icons/icon-5.png');
-      }
-      &.item5.active{
-        background-image: url('../assets/icons/icon-5-hover.png');
-      }
-      &.item6{
-        background-image: url('../assets/icons/icon-6.png');
-      }
-      &.item6.active{
-        background-image: url('../assets/icons/icon-6-hover.png');
-      }
-    }
-  }
-  .type-wrap,.material-wrap{
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    .type-item,.material-item{
-      height: 40px;
-      line-height: 40px;
-      display: inline-block;
-      text-align: center;
-      width: 25%;
-      float: left;
-      cursor:pointer;
-      &.active{
-        color: #F08200;
-      }
-    }
-  }
-  .type-content{
-    .color-wrap,.img-wrap{
-      max-width: 100%;
-      padding: 5px;
-      white-space: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-      background-color: #f8f9fb;
-      font-size: 0;
-      &::-webkit-scrollbar {
-        width: 0px;
-        height: 0px;
-      }
-      .color-item-wrap{
-        display: inline-block;
-        margin-right: 6px;
-        &:last-child{
-          margin-right: 0;
-        }
-        width: 80px;
-        .color-item{
-          display: inline-block;
-          height: 80px;
-          width: 100%;
-          border-radius: 4px;
-          border: 1px solid #eee;
-          box-sizing: border-box;
-        }
-      }
-      .label{
-        font-size: 12px;
-        text-align: center;
-      }
-      .img-item-wrap{
-        width: 80px;
-        margin-right: 6px;
-        display: inline-block;
-        &:last-child{
-          margin-right: 0;
-        }
-        .img-item{
-          height: 80px;
-          border-radius: 4px;
-          display: inline-block;
-          border: 1px solid #eee;
-          box-sizing: border-box;
-          &.active{
-            border-color: #F08200;
-          }
-        }
-      }
-    }
+  .material-mask{
+    position: absolute;
+    top:0;
+    right: 0;
+    width: 100%;
+    z-index: 2;
+    background-color: #fff;
+    height: 100%;
   }
 }
 </style>
