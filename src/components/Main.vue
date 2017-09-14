@@ -3,10 +3,12 @@
     <header class="header">定制系统</header>
     <div class="canvas-panel-wrap">
       <div class="canvas-panel" id="canvas-panel">
-        <canvas id="shoe-canvas" class="canvas-show"></canvas>
-        <canvas id="tidai-canvas" class="canvas-show"></canvas>
-        <canvas id="lingkou-canvas" class="canvas-show"></canvas>
-        <canvas id="mask-canvas" class="canvas-show"></canvas>
+        <img :src='m_current_image' style="left:0px;top:0px;" v-show="m_config.direction == 'up'" id="canvas-img" alt="">
+        <canvas id="shoe-canvas" class="canvas-show" style="zIndex: 60;"></canvas>
+        <canvas id="tidai-canvas" class="canvas-show" style="zIndex: 70;"></canvas>
+        <canvas id="lingkou-canvas" class="canvas-show" style="zIndex: 80;"></canvas>
+        <canvas id="mask-canvas" class="canvas-show" style="zIndex: 90;"></canvas>
+        <canvas id="qrcode-canvas" class="canvas-show" style="zIndex: 100;"></canvas>
       </div>
     </div>
     <div class="footer">
@@ -27,7 +29,7 @@
       <div class="type-content">
         <div class="img-wrap" v-show="m_type == 1">
           <div class="img-item-wrap" v-for="item in m_images">
-            <img :src="item.src" class="img-item" alt="">
+            <img :src="item.src" class="img-item" v-on:click="f_choose_current_image(item.src)">
             <p class="label">￥{{item.price}}</p>
           </div>
         </div>
@@ -44,9 +46,9 @@
           </div>
         </div>
         <div class="img-wrap" v-show="m_type == 4">
-          <div class="img-item-wrap" v-for="item in m_qrcode_images">
-            <img :src="item" class="img-item" alt="">
-            <p class="label">向上</p>
+          <div class="img-item-wrap" v-for="item in m_qrcode_images" v-on:click="f_choose_qrcode_direction(item.direction)">
+            <img :src="item.src" class="img-item" :class="{'active': m_config.qrcode == item.direction}" alt="">
+            <p class="label">{{item.name}}</p>
           </div>
         </div>
       </div>
@@ -57,7 +59,7 @@
         <span class="material-item" :class="{'active': m_material == 4}" v-on:click='f_choose_material(4)'>上传</span>
       </div>
     </div>
-    <Material class="material-mask"></Material>
+    <Material class="material-mask" v-on:choose='f_choose_image' v-on:close="f_close_material_mask" v-if='m_material_mask_show'></Material>
   </div>
 </template>
 
@@ -80,18 +82,31 @@ export default {
       m_lingkou_canvas: null,
       m_tidai_canvas: null,
       m_mask_canvas: null,
+      m_qrcode_canvas: null,
       m_origin_lingkou_canvas: null,
       m_origin_tidai_canvas: null,
       m_origin_mask_canvas: null,
       m_color: Color,
       m_images: Image,
+      m_material_mask_show: false,
+      m_current_image: '',  //当前选择的鞋面图片
       m_qrcode_images: [
-        require('../assets/icons/qr_top.jpg'),
-        require('../assets/icons/qr_side.jpg'),
-        require('../assets/icons/qr_no.jpg')
+        {
+          direction: 'top',
+          src: require('../assets/icons/qr_top.jpg'),
+          name: '正面区域'
+        },{
+          direction: 'side',
+          src: require('../assets/icons/qr_side.jpg'),
+          name: '侧面区域'
+        },{
+          direction: 'no',
+          src: require('../assets/icons/qr_no.jpg'),
+          name: '不印刷'
+        }
       ],
       m_config: {
-        direction: 'top',
+        direction: 'up',
         tidai_color: '',
         lingkou_color: '',
         qrcode: 'top'
@@ -101,11 +116,36 @@ export default {
   mounted() {
     this.f_init_canvas()
     this.f_set_config()
+    this.f_init_event()
   },
   components: {
     Material
   },
   methods: {
+    f_init_event() {
+      let canvasPanel = document.getElementById('canvas-panel')
+      let canvasImg = document.getElementById('canvas-img')
+      let canvasPanelPos = canvasPanel.getBoundingClientRect()
+      let touchStartPos = {}
+      let touchMovePos = {}
+      let touchStartFunc = (event) => {
+        touchStartPos = event.targetTouches[0]
+        canvasPanel.addEventListener('touchmove', touchMoveFunc, false)
+        canvasPanel.addEventListener('touchend', touchEndFunc, false)
+      }
+      let touchMoveFunc = (event) => {
+        touchStartPos = touchMovePos
+        touchMovePos = event.targetTouches[0]
+        let left = touchMovePos.clientX - touchStartPos.clientX
+        let top = touchMovePos.clientY - touchStartPos.clientY
+        canvasImg.style.top = parseInt(canvasImg.style.top) + top + 'px'
+        canvasImg.style.left = parseInt(canvasImg.style.left) + left + 'px'
+      }
+      let touchEndFunc = () => {
+        canvasPanel.removeEventListener('touchmove', touchMoveFunc, false)
+      }
+      canvasPanel.addEventListener('touchstart', touchStartFunc, false)
+    },
     f_init_canvas () {
       let canvasPanel = document.getElementById('canvas-panel')
       let position = canvasPanel.getBoundingClientRect()
@@ -114,6 +154,7 @@ export default {
       this.m_lingkou_canvas = document.getElementById("lingkou-canvas")
       this.m_mask_canvas = document.getElementById("mask-canvas")
       this.m_tidai_canvas = document.getElementById("tidai-canvas")
+      this.m_qrcode_canvas = document.getElementById("qrcode-canvas")
 
       this.m_canvas_width = Math.round(position.width) * 2
       this.m_canvas_height = Math.round(position.height) * 2
@@ -126,6 +167,8 @@ export default {
       this.m_mask_canvas.width = this.m_canvas_width
       this.m_tidai_canvas.height = this.m_canvas_height
       this.m_tidai_canvas.width = this.m_canvas_width
+      this.m_qrcode_canvas.height = this.m_canvas_height
+      this.m_qrcode_canvas.width = this.m_canvas_width
 
       // 保留原始的 canvas 的状态
       this.m_origin_tidai_canvas = document.createElement('canvas')
@@ -142,6 +185,7 @@ export default {
       this.m_shoe_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_lingkou_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_mask_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_qrcode_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_tidai_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_origin_tidai_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_origin_mask_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
@@ -150,27 +194,93 @@ export default {
     f_set_config () {
       if (this.m_config.direction === 'up') {
           this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '.png'))
-          this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '.png'))
       } else if (this.m_config.direction === 'bottom') {
         this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '.png'))
       } else {
+        // 先设置需要参考的 canvas
+        this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'))
+        this.f_set_image(this.m_origin_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'))
+        this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'))
+
+        // 设置鞋底
         this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '/shoe.png'))
-        this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'))
+
+        // 设置二维码
+        this.f_set_qrcode()
+
+        // 设置鞋面
+        this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'), () => {
+          if (this.m_current_image == '') {
+            return
+          }
+          let canvasImg = document.getElementById('canvas-img')
+          this.f_set_current_image(this.m_current_image, parseInt(canvasImg.style.left), parseInt(canvasImg.style.top))
+        })
+        // 设置提带
         this.f_set_image(this.m_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'), () => {
           if (this.m_config.tidai_color !== '') {
             this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_tidai_canvas, this.m_config.tidai_color), 0, 0)
           }
         })
+        // 设置领口
         this.f_set_image(this.m_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'), () => {
           if (this.m_config.lingkou_color !== '') {
             this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
           }
         })
-        this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'))
-        this.f_set_image(this.m_origin_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'))
-        this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'))
       }
+    },
+    f_set_qrcode () {
+      if (this.m_config.direction === 'top' && this.m_config.qrcode === 'top') {
+        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'))
+      }
+      if (this.m_config.direction === 'right' && this.m_config.qrcode === 'top') {
+        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode_top.png'))
+      }
+      if (this.m_config.direction === 'right' && this.m_config.qrcode === 'side') {
+        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode_side.png'))
+      }
+      if (this.m_config.direction === 'left' && this.m_config.qrcode === 'top') {
+        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'))
+      }
+      this.m_qrcode_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+    },
+    f_choose_image(src){
+      this.f_choose_current_image(src)
+    },
+    f_choose_current_image(src) {
+      this.m_current_image = src
+      let canvasImg = document.getElementById('canvas-img')
+      this.f_set_current_image(this.m_current_image, parseInt(canvasImg.style.left), parseInt(canvasImg.style.top))
+    },
+    f_set_current_image (src, offsetX, offsetY) {
+      // 设置鞋面的 canvas
+      let canvas = document.createElement('canvas')
+      let ctx = canvas.getContext('2d')
+      canvas.height = this.m_mask_canvas.height
+      canvas.width = this.m_mask_canvas.width
+      let img = document.createElement('img')
+      img.onload = () => {
+        ctx.drawImage(img, offsetX, offsetY)
 
+        // 设置 imageData
+        let imageDataOrigin = this.m_origin_mask_canvas.getContext('2d').getImageData(0, 0, this.m_origin_mask_canvas.width, this.m_origin_mask_canvas.height)
+        let imageDataShow = this.m_mask_canvas.getContext('2d').getImageData(0, 0, this.m_mask_canvas.width, this.m_mask_canvas.height)
+        let currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+        for (var i = 0; i < imageDataOrigin.data.length; i += 4) {
+          if (imageDataOrigin.data[i + 3] < 200) {
+            continue
+          } else {
+            imageDataShow.data[i + 0] = currentImageData.data[i + 0]
+            imageDataShow.data[i + 1] = currentImageData.data[i + 1]
+            imageDataShow.data[i + 2] = currentImageData.data[i + 2]
+            imageDataShow.data[i + 3] = currentImageData.data[i + 3]
+          }
+        }
+        this.m_mask_canvas.getContext('2d').putImageData(imageDataShow, 0, 0)
+      }
+      img.src = src
     },
     f_set_image (canvas, src, callback) {
       let ctx = canvas.getContext('2d')
@@ -218,6 +328,17 @@ export default {
     },
     f_choose_material (material) {
       this.m_material = material
+      if (this.m_material == 1) {
+        this.m_material_mask_show = true
+      }
+    },
+    // 选择二维码方向
+    f_choose_qrcode_direction (direction) {
+      this.m_config.qrcode = direction
+      this.f_set_qrcode()
+    },
+    f_close_material_mask () {
+      this.m_material_mask_show = false
     },
     f_get_imageData(src) {
       let canvas = document.createElement('canvas')
@@ -443,6 +564,7 @@ export default {
       width: 80%;
       height: 100%;
       text-align: center;
+      overflow: hidden;
       .direction{
         height: 100%;
         position: relative;
@@ -454,12 +576,14 @@ export default {
         height: 100%;
         width: 100%;
       }
+      canvas{
+        // background-color: #fff;
+      }
       img{
-        top:50%;
-        left:50%;
+        top:0;
+        left:0;
         max-height: 100%;
         max-width: 100%;
-        transform: translateX(-50%) translateY(-50%);
         position: absolute;
       }
     }

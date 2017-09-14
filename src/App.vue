@@ -29,7 +29,7 @@ html,body,#app{
   color: #555;
   max-width: 400px;
   margin:0 auto;
-  border: 1px solid #eee;
+  // border: 1px solid #eee;
 }
 //清除浮动
 .clearfix{
