@@ -14,6 +14,8 @@ export default {
 *{
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent; /* For some Androids */
 }
 html,body,#app{
   height: 100%;

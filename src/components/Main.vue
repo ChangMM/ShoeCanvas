@@ -109,7 +109,7 @@ export default {
         direction: 'up',
         tidai_color: '',
         lingkou_color: '',
-        qrcode: 'top'
+        qrcode: 'no'
       }
     }
   },
@@ -231,6 +231,7 @@ export default {
       }
     },
     f_set_qrcode () {
+      this.m_qrcode_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       if (this.m_config.direction === 'top' && this.m_config.qrcode === 'top') {
         return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'))
       }
@@ -243,7 +244,6 @@ export default {
       if (this.m_config.direction === 'left' && this.m_config.qrcode === 'top') {
         return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'))
       }
-      this.m_qrcode_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
     },
     f_choose_image(src){
       this.f_choose_current_image(src)
@@ -495,6 +495,7 @@ export default {
         white-space: nowrap;
         overflow-x: auto;
         overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
         background-color: #f8f9fb;
         font-size: 0;
         &::-webkit-scrollbar {
@@ -546,6 +547,7 @@ export default {
     padding-left: 10%;
     padding-right: 10%;
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
     position: relative;
     top:50%;
     transform: translateY(-50%);

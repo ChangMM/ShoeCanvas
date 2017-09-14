@@ -69,6 +69,7 @@ export default {
     height: 52px;
     background: #fff;
     overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
     vertical-align: middle;
     font-size: 0;
     white-space: nowrap;
@@ -116,6 +117,7 @@ export default {
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     .material-item{
       float: left;
       margin-top: 10px;
