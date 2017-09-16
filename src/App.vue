@@ -20,6 +20,8 @@ export default {
 html,body,#app{
   height: 100%;
   box-sizing: border-box;
+  overflow-y:scroll;
+  -webkit-overflow-scrolling:touch;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -31,7 +33,6 @@ html,body,#app{
   color: #555;
   max-width: 400px;
   margin:0 auto;
-  // border: 1px solid #eee;
 }
 //清除浮动
 .clearfix{
