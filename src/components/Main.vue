@@ -71,7 +71,6 @@ import Color from '../Color'
 import Image from '../Images'
 import Material from './Material.vue'
 import AlloyFinger from 'alloyfinger'
-import R from 'ramda'
 export default {
   name: 'main',
   data () {
