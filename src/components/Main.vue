@@ -3,12 +3,14 @@
     <header class="header">定制系统</header>
     <div class="canvas-panel-wrap">
       <div class="canvas-panel" id="canvas-panel">
-        <img :src='m_current_image' style="left:0px;top:0px;" v-show="m_config.direction == 'up'" id="canvas-img" alt="">
-        <canvas id="shoe-canvas" class="canvas-show" style="zIndex: 60;"></canvas>
-        <canvas id="tidai-canvas" class="canvas-show" style="zIndex: 70;"></canvas>
-        <canvas id="lingkou-canvas" class="canvas-show" style="zIndex: 80;"></canvas>
-        <canvas id="mask-canvas" class="canvas-show" style="zIndex: 90;"></canvas>
-        <canvas id="qrcode-canvas" class="canvas-show" style="zIndex: 100;"></canvas>
+        <img :src='m_current_image' :style="'left:'+ m_img_config.left +'px;top:' + m_img_config.top +'px; transform: rotate(' + m_img_config.rotate + 'deg) scale(' + m_img_config.zoom + ')'" v-show="m_config.direction == 'up'" id="canvas-img" alt="">
+        <canvas id="shoe-canvas" v-show="m_config.direction != 'top'" class="canvas-show"></canvas>
+        <canvas id="tidai-canvas" v-show="m_config.direction != 'top'" class="canvas-show"></canvas>
+        <canvas id="lingkou-canvas" v-show="m_config.direction != 'top'" class="canvas-show"></canvas>
+        <canvas id="mask-canvas" v-show="m_config.direction != 'top'" class="canvas-show"></canvas>
+        <canvas id="qrcode-canvas" v-show="m_config.direction != 'top'" class="canvas-show"></canvas>
+        <canvas id="left-canvas" v-show="m_config.direction == 'top'" class="canvas-left"></canvas>
+        <canvas id="right-canvas" v-show="m_config.direction == 'top'" class="canvas-right"></canvas>
       </div>
     </div>
     <div class="footer">
@@ -52,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="material-wrap clearfix">
+      <div class="material-wrap clearfix" v-show="m_type==1">
         <span class="material-item" :class="{'active': m_material == 1}" v-on:click='f_choose_material(1)'>素材</span>
         <span class="material-item" :class="{'active': m_material == 2}" v-on:click='f_choose_material(2)'>付费</span>
         <span class="material-item" :class="{'active': m_material == 3}" v-on:click='f_choose_material(3)'>花纹</span>
@@ -68,7 +70,7 @@ import Utils from '../Utils'
 import Color from '../Color'
 import Image from '../Images'
 import Material from './Material.vue'
-import R from 'ramda'
+import AlloyFinger from 'alloyfinger'
 export default {
   name: 'main',
   data () {
@@ -83,6 +85,8 @@ export default {
       m_tidai_canvas: null,
       m_mask_canvas: null,
       m_qrcode_canvas: null,
+      m_left_canvas: null,
+      m_right_canvas: null,
       m_origin_lingkou_canvas: null,
       m_origin_tidai_canvas: null,
       m_origin_mask_canvas: null,
@@ -90,6 +94,12 @@ export default {
       m_images: Image,
       m_material_mask_show: false,
       m_current_image: '',  //当前选择的鞋面图片
+      m_img_config: {
+        rotate: 0,
+        left: 0,
+        top: 0,
+        zoom: 1
+      },
       m_qrcode_images: [
         {
           direction: 'top',
@@ -125,26 +135,41 @@ export default {
     f_init_event() {
       let canvasPanel = document.getElementById('canvas-panel')
       let canvasImg = document.getElementById('canvas-img')
-      let canvasPanelPos = canvasPanel.getBoundingClientRect()
-      let touchStartPos = {}
-      let touchMovePos = {}
-      let touchStartFunc = (event) => {
-        touchStartPos = event.targetTouches[0]
-        canvasPanel.addEventListener('touchmove', touchMoveFunc, false)
-        canvasPanel.addEventListener('touchend', touchEndFunc, false)
-      }
-      let touchMoveFunc = (event) => {
-        touchStartPos = touchMovePos
-        touchMovePos = event.targetTouches[0]
-        let left = touchMovePos.clientX - touchStartPos.clientX
-        let top = touchMovePos.clientY - touchStartPos.clientY
-        canvasImg.style.top = parseInt(canvasImg.style.top) + top + 'px'
-        canvasImg.style.left = parseInt(canvasImg.style.left) + left + 'px'
-      }
-      let touchEndFunc = () => {
-        canvasPanel.removeEventListener('touchmove', touchMoveFunc, false)
-      }
-      canvasPanel.addEventListener('touchstart', touchStartFunc, false)
+      // let touchStartPos = {}
+      // let touchMovePos = {}
+      // let touchStartFunc = (event) => {
+      //   if (this.m_config.direction != 'up') {
+      //     return
+      //   }
+      //   touchStartPos = event.targetTouches[0]
+      //   canvasPanel.addEventListener('touchmove', touchMoveFunc, false)
+      //   canvasPanel.addEventListener('touchend', touchEndFunc, false)
+      // }
+      // let touchMoveFunc = (event) => {
+      //   touchStartPos = touchMovePos
+      //   touchMovePos = event.targetTouches[0]
+      //   let left = touchMovePos.clientX - touchStartPos.clientX
+      //   let top = touchMovePos.clientY - touchStartPos.clientY
+      //   canvasImg.style.top = parseInt(canvasImg.style.top) + top + 'px'
+      //   canvasImg.style.left = parseInt(canvasImg.style.left) + left + 'px'
+      // }
+      // let touchEndFunc = () => {
+      //   canvasPanel.removeEventListener('touchmove', touchMoveFunc, false)
+      // }
+      // canvasPanel.addEventListener('touchstart', touchStartFunc, false)
+      let self = this
+      var af = new AlloyFinger(canvasPanel, {
+        rotate: function (evt) {
+          self.m_img_config.rotate += evt.angle
+        },
+        pinch: function (evt) {
+          self.m_img_config.zoom = evt.zoom
+        },
+        pressMove: function (evt) {
+          self.m_img_config.left += evt.deltaX
+          self.m_img_config.top += evt.deltaY
+        }
+      })
     },
     f_init_canvas () {
       let canvasPanel = document.getElementById('canvas-panel')
@@ -155,6 +180,8 @@ export default {
       this.m_mask_canvas = document.getElementById("mask-canvas")
       this.m_tidai_canvas = document.getElementById("tidai-canvas")
       this.m_qrcode_canvas = document.getElementById("qrcode-canvas")
+      this.m_left_canvas = document.getElementById("left-canvas")
+      this.m_right_canvas = document.getElementById("right-canvas")
 
       this.m_canvas_width = Math.round(position.width) * 2
       this.m_canvas_height = Math.round(position.height) * 2
@@ -169,6 +196,11 @@ export default {
       this.m_tidai_canvas.width = this.m_canvas_width
       this.m_qrcode_canvas.height = this.m_canvas_height
       this.m_qrcode_canvas.width = this.m_canvas_width
+
+      this.m_left_canvas.height = this.m_canvas_height
+      this.m_left_canvas.width = this.m_canvas_width
+      this.m_right_canvas.height = this.m_canvas_height
+      this.m_right_canvas.width = this.m_canvas_width
 
       // 保留原始的 canvas 的状态
       this.m_origin_tidai_canvas = document.createElement('canvas')
@@ -187,6 +219,9 @@ export default {
       this.m_mask_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_qrcode_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_tidai_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_left_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+      this.m_right_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
+
       this.m_origin_tidai_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_origin_mask_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       this.m_origin_lingkou_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
@@ -197,52 +232,118 @@ export default {
       } else if (this.m_config.direction === 'bottom') {
         this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '.png'))
       } else {
+        let arr = []
         // 先设置需要参考的 canvas
-        this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'))
-        this.f_set_image(this.m_origin_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'))
-        this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'))
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'), () => {
+            console.log(1)
+            resolve(1)
+          })
+        }))
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_origin_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'), () => {
+            console.log(2)
+            resolve(1)
+          })
+        }))
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'), () => {
+            console.log(3)
+            resolve(1)
+          })
+        }))
 
         // 设置鞋底
-        this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '/shoe.png'))
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '/shoe.png'), () => {
+            console.log(4)
+            resolve(1)
+          })
+        }))
 
         // 设置二维码
-        this.f_set_qrcode()
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_qrcode(() => {
+            console.log(5)
+            resolve(1)
+          })
+        }))
 
         // 设置鞋面
-        this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'), () => {
-          if (this.m_current_image == '') {
-            return
-          }
-          let canvasImg = document.getElementById('canvas-img')
-          this.f_set_current_image(this.m_current_image, parseInt(canvasImg.style.left), parseInt(canvasImg.style.top))
-        })
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'), () => {
+            if (this.m_current_image == '') {
+              console.log(6)
+              resolve(1)
+              return
+            }
+            let canvasImg = document.getElementById('canvas-img')
+            this.f_set_current_image(this.m_current_image, parseInt(canvasImg.style.left), parseInt(canvasImg.style.top), () => {
+              console.log(6)
+              resolve(1)
+            })
+          })
+        }))
+
+
         // 设置提带
-        this.f_set_image(this.m_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'), () => {
-          if (this.m_config.tidai_color !== '') {
-            this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_tidai_canvas, this.m_config.tidai_color), 0, 0)
-          }
-        })
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'), () => {
+            if (this.m_config.tidai_color !== '') {
+              this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_tidai_canvas, this.m_config.tidai_color), 0, 0)
+            }
+            console.log(resolve(1))
+          })
+        }))
+
         // 设置领口
-        this.f_set_image(this.m_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'), () => {
-          if (this.m_config.lingkou_color !== '') {
-            this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
-          }
-        })
+        arr.push(new Promise((resolve, reject) => {
+          this.f_set_image(this.m_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'), () => {
+            if (this.m_config.lingkou_color !== '') {
+              this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
+            }
+            console.log(resolve(1))
+          })
+        }))
+
+        if (this.m_config.direction == 'top') {
+          let right_ctx = this.m_right_canvas.getContext('2d')
+          let left_ctx = this.m_left_canvas.getContext('2d')
+          left_ctx.translate(this.m_canvas_width, 0)
+          left_ctx.scale(-1, 1);
+
+          Promise.all(arr).then((responses) => {
+            right_ctx.drawImage(this.m_shoe_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            right_ctx.drawImage(this.m_mask_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            right_ctx.drawImage(this.m_lingkou_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            right_ctx.drawImage(this.m_tidai_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            right_ctx.drawImage(this.m_qrcode_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+
+            left_ctx.drawImage(this.m_shoe_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            left_ctx.drawImage(this.m_mask_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            left_ctx.drawImage(this.m_lingkou_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            left_ctx.drawImage(this.m_tidai_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+            left_ctx.drawImage(this.m_qrcode_canvas, 0, 0, this.m_canvas_width, this.m_canvas_height)
+
+            //翻转回来
+            left_ctx.translate(this.m_canvas_width, 0)
+            left_ctx.scale(-1, 1)
+          })
+        }
       }
     },
-    f_set_qrcode () {
+    f_set_qrcode (callback) {
       this.m_qrcode_canvas.getContext('2d').clearRect(0, 0, this.m_canvas_width, this.m_canvas_height)
       if (this.m_config.direction === 'top' && this.m_config.qrcode === 'top') {
-        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'))
-      }
-      if (this.m_config.direction === 'right' && this.m_config.qrcode === 'top') {
-        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode_top.png'))
-      }
-      if (this.m_config.direction === 'right' && this.m_config.qrcode === 'side') {
-        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode_side.png'))
-      }
-      if (this.m_config.direction === 'left' && this.m_config.qrcode === 'top') {
-        return this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'))
+        this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'), callback)
+      }else if (this.m_config.direction === 'right' && this.m_config.qrcode === 'top') {
+        this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode_top.png'), callback)
+      }else if (this.m_config.direction === 'right' && this.m_config.qrcode === 'side') {
+        this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode_side.png'), callback)
+      }else if (this.m_config.direction === 'left' && this.m_config.qrcode === 'top') {
+        this.f_set_image(this.m_qrcode_canvas, require('../assets/' + this.m_config.direction + '/qrcode.png'), callback)
+      }else {
+          callback && callback()
       }
     },
     f_choose_image(src){
@@ -250,10 +351,14 @@ export default {
     },
     f_choose_current_image(src) {
       this.m_current_image = src
-      let canvasImg = document.getElementById('canvas-img')
-      this.f_set_current_image(this.m_current_image, parseInt(canvasImg.style.left), parseInt(canvasImg.style.top))
+      this.m_img_config.rotate = 0
+      this.m_img_config.left = 0
+      this.m_img_config.zoom = 1
+      this.m_img_config.top = 0
+      this.f_clear_canvas()
+      this.f_set_config()
     },
-    f_set_current_image (src, offsetX, offsetY) {
+    f_set_current_image (src, offsetX, offsetY, callback) {
       // 设置鞋面的 canvas
       let canvas = document.createElement('canvas')
       let ctx = canvas.getContext('2d')
@@ -279,6 +384,7 @@ export default {
           }
         }
         this.m_mask_canvas.getContext('2d').putImageData(imageDataShow, 0, 0)
+        callback && callback()
       }
       img.src = src
     },
@@ -306,17 +412,27 @@ export default {
         offsetX = (this.m_canvas_width - dWidth) / 2
         offsetY = (this.m_canvas_height - dHeight) / 2
         ctx.drawImage(img, 0, 0, width, height, offsetX, offsetY, dWidth, dHeight)
-        callback && callback(canvas)
+        callback && callback()
       }
       img.src = src
     },
     f_set_tidai_color (color) {
       this.m_config.tidai_color = color
       this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_origin_tidai_canvas, this.m_config.tidai_color), 0, 0)
+      if (this.m_config.direction == 'up' || this.m_config.direction == 'bottom' || this.m_config.direction == 'top') {
+        this.m_config.direction = 'top'
+        this.f_clear_canvas()
+        this.f_set_config()
+      }
     },
     f_set_lingkou_color (color) {
       this.m_config.lingkou_color = color
       this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_origin_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
+      if (this.m_config.direction == 'up' || this.m_config.direction == 'bottom' || this.m_config.direction == 'top') {
+        this.m_config.direction = 'top'
+        this.f_clear_canvas()
+        this.f_set_config()
+      }
     },
     f_choose_direction (direction) {
       this.m_config.direction = direction
@@ -335,6 +451,16 @@ export default {
     // 选择二维码方向
     f_choose_qrcode_direction (direction) {
       this.m_config.qrcode = direction
+      if (direction == 'top') {
+        this.m_config.direction = 'top'
+        this.f_clear_canvas()
+        this.f_set_config()
+      }
+      if (direction == 'side') {
+        this.m_config.direction = 'right'
+        this.f_clear_canvas()
+        this.f_set_config()
+      }
       this.f_set_qrcode()
     },
     f_close_material_mask () {
@@ -392,7 +518,7 @@ export default {
           data[i +2] = RGB[2]
         }
       }
-      callback && callback (imgData)
+      callback && callback ()
       return imgData
     }
   }
@@ -421,6 +547,7 @@ export default {
     left:0;
     bottom: 0;
     width: 100%;
+    height: 240px;
     .tools-wrap{
       margin-top: 15px;
       text-align: center;
@@ -497,6 +624,7 @@ export default {
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         background-color: #f8f9fb;
+        border: 1px solid #eee;
         font-size: 0;
         &::-webkit-scrollbar {
           width: 0px;
@@ -578,8 +706,21 @@ export default {
         height: 100%;
         width: 100%;
       }
+      .canvas-left{
+        left:-25%;
+        position: absolute;
+        top:0;
+        height: 100%;
+        width: 100%;
+      }
+      .canvas-right{
+        right:-25%;
+        position: absolute;
+        top:0;
+        height: 100%;
+        width: 100%;
+      }
       canvas{
-        // background-color: #fff;
       }
       img{
         top:0;
