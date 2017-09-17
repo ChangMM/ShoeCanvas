@@ -11,6 +11,7 @@
         <canvas id="qrcode-canvas" v-show="m_config.direction != 'top'" class="canvas-show"></canvas>
         <canvas id="left-canvas" v-show="m_config.direction == 'top'" class="canvas-left"></canvas>
         <canvas id="right-canvas" v-show="m_config.direction == 'top'" class="canvas-right"></canvas>
+        <canvas id="test-canvas" v-show="m_config.direction == 'top'" width="600" height="600" class="canvas-show"></canvas>
       </div>
     </div>
     <div class="footer">
@@ -58,7 +59,10 @@
         <span class="material-item" :class="{'active': m_material == 1}" v-on:click='f_choose_material(1)'>素材</span>
         <span class="material-item" :class="{'active': m_material == 2}" v-on:click='f_choose_material(2)'>付费</span>
         <span class="material-item" :class="{'active': m_material == 3}" v-on:click='f_choose_material(3)'>花纹</span>
-        <span class="material-item" :class="{'active': m_material == 4}" v-on:click='f_choose_material(4)'>上传</span>
+        <span class="material-item" :class="{'active': m_material == 4}" v-on:click='f_choose_material(4)'>
+          <input type="file" v-on:change="f_upload_image" accept="image/*">
+          上传
+        </span>
       </div>
     </div>
     <Material class="material-mask" v-on:choose='f_choose_image' v-on:close="f_close_material_mask" v-if='m_material_mask_show'></Material>
@@ -135,28 +139,6 @@ export default {
     f_init_event() {
       let canvasPanel = document.getElementById('canvas-panel')
       let canvasImg = document.getElementById('canvas-img')
-      // let touchStartPos = {}
-      // let touchMovePos = {}
-      // let touchStartFunc = (event) => {
-      //   if (this.m_config.direction != 'up') {
-      //     return
-      //   }
-      //   touchStartPos = event.targetTouches[0]
-      //   canvasPanel.addEventListener('touchmove', touchMoveFunc, false)
-      //   canvasPanel.addEventListener('touchend', touchEndFunc, false)
-      // }
-      // let touchMoveFunc = (event) => {
-      //   touchStartPos = touchMovePos
-      //   touchMovePos = event.targetTouches[0]
-      //   let left = touchMovePos.clientX - touchStartPos.clientX
-      //   let top = touchMovePos.clientY - touchStartPos.clientY
-      //   canvasImg.style.top = parseInt(canvasImg.style.top) + top + 'px'
-      //   canvasImg.style.left = parseInt(canvasImg.style.left) + left + 'px'
-      // }
-      // let touchEndFunc = () => {
-      //   canvasPanel.removeEventListener('touchmove', touchMoveFunc, false)
-      // }
-      // canvasPanel.addEventListener('touchstart', touchStartFunc, false)
       let self = this
       var af = new AlloyFinger(canvasPanel, {
         rotate: function (evt) {
@@ -236,19 +218,16 @@ export default {
         // 先设置需要参考的 canvas
         arr.push(new Promise((resolve, reject) => {
           this.f_set_image(this.m_origin_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'), () => {
-            console.log(1)
             resolve(1)
           })
         }))
         arr.push(new Promise((resolve, reject) => {
           this.f_set_image(this.m_origin_tidai_canvas, require('../assets/' + this.m_config.direction + '/tidai.png'), () => {
-            console.log(2)
             resolve(1)
           })
         }))
         arr.push(new Promise((resolve, reject) => {
           this.f_set_image(this.m_origin_lingkou_canvas, require('../assets/' + this.m_config.direction + '/lingkou.png'), () => {
-            console.log(3)
             resolve(1)
           })
         }))
@@ -256,7 +235,6 @@ export default {
         // 设置鞋底
         arr.push(new Promise((resolve, reject) => {
           this.f_set_image(this.m_shoe_canvas, require('../assets/' + this.m_config.direction + '/shoe.png'), () => {
-            console.log(4)
             resolve(1)
           })
         }))
@@ -264,7 +242,6 @@ export default {
         // 设置二维码
         arr.push(new Promise((resolve, reject) => {
           this.f_set_qrcode(() => {
-            console.log(5)
             resolve(1)
           })
         }))
@@ -273,13 +250,11 @@ export default {
         arr.push(new Promise((resolve, reject) => {
           this.f_set_image(this.m_mask_canvas, require('../assets/' + this.m_config.direction + '/mask.png'), () => {
             if (this.m_current_image == '') {
-              console.log(6)
               resolve(1)
               return
             }
             let canvasImg = document.getElementById('canvas-img')
-            this.f_set_current_image(this.m_current_image, parseInt(canvasImg.style.left), parseInt(canvasImg.style.top), () => {
-              console.log(6)
+            this.f_set_current_image(this.m_current_image, () => {
               resolve(1)
             })
           })
@@ -292,7 +267,7 @@ export default {
             if (this.m_config.tidai_color !== '') {
               this.m_tidai_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_tidai_canvas, this.m_config.tidai_color), 0, 0)
             }
-            console.log(resolve(1))
+            resolve(1)
           })
         }))
 
@@ -302,7 +277,7 @@ export default {
             if (this.m_config.lingkou_color !== '') {
               this.m_lingkou_canvas.getContext('2d').putImageData(this.f_recolor_canvas(this.m_lingkou_canvas, this.m_config.lingkou_color), 0, 0)
             }
-            console.log(resolve(1))
+            resolve(1)
           })
         }))
 
@@ -346,6 +321,14 @@ export default {
           callback && callback()
       }
     },
+    f_upload_image() {
+      let files = event.target.files
+      let reader = new FileReader()
+      reader.onload = () => {
+        this.f_choose_image(event.target.result)
+      }
+      reader.readAsDataURL(files[0])
+    },
     f_choose_image(src){
       this.f_choose_current_image(src)
     },
@@ -358,33 +341,81 @@ export default {
       this.f_clear_canvas()
       this.f_set_config()
     },
-    f_set_current_image (src, offsetX, offsetY, callback) {
+    f_set_current_image (src, callback) {
+      let offsetX = this.m_img_config.left
+      let offsetY = this.m_img_config.top
       // 设置鞋面的 canvas
       let canvas = document.createElement('canvas')
       let ctx = canvas.getContext('2d')
+      let ctx_test = document.getElementById('test-canvas').getContext('2d')
       canvas.height = this.m_mask_canvas.height
       canvas.width = this.m_mask_canvas.width
       let img = document.createElement('img')
       img.onload = () => {
-        ctx.drawImage(img, offsetX, offsetY)
+        img.width = img.width * 2 * this.m_img_config.zoom
+        img.height = img.height * 2 * this.m_img_config.zoom
+        let imgWidth = img.width
+        let imgHeight = img.height
+        ctx.translate(this.m_img_config.left * 2 + imgWidth / 2, this.m_img_config.top * 2 + imgHeight / 2)
+        ctx.rotate(this.m_img_config.rotate * Math.PI / 180)
+        ctx.drawImage(img, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight)
 
-        // 设置 imageData
-        let imageDataOrigin = this.m_origin_mask_canvas.getContext('2d').getImageData(0, 0, this.m_origin_mask_canvas.width, this.m_origin_mask_canvas.height)
-        let imageDataShow = this.m_mask_canvas.getContext('2d').getImageData(0, 0, this.m_mask_canvas.width, this.m_mask_canvas.height)
-        let currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        // 根据不同的反向设置不同参数
+        if (this.m_config.direction == 'left' || this.m_config.direction == 'right') {
+          // 再做一次变换
+          let image = document.createElement('img')
+          image.onload = () => {
+            let canvas_final = document.createElement('canvas')
+            canvas_final.height = this.m_mask_canvas.height
+            canvas_final.width = this.m_mask_canvas.width
+            let ctx_final = canvas_final.getContext('2d')
+            // 这是一点点试出来的
+            if (this.m_config.direction == 'left') {
+              ctx_final.translate(this.m_canvas_width / 2 - 60, this.m_canvas_height / 2 - 110)
+              ctx_final.rotate(-120 * Math.PI / 180)
+            } else if (this.m_config.direction == 'right') {
+              ctx_final.translate(this.m_canvas_width / 2 + 64, this.m_canvas_height / 2 - 128)
+              ctx_final.rotate(114 * Math.PI / 180)
+            }
+            ctx_final.drawImage(image, -this.m_canvas_width / 2, -this.m_canvas_height / 2, this.m_canvas_width , this.m_canvas_height)
+            // 设置像素点
+            let imageDataOrigin = this.m_origin_mask_canvas.getContext('2d').getImageData(0, 0, this.m_origin_mask_canvas.width, this.m_origin_mask_canvas.height)
+            let imageDataShow = this.m_mask_canvas.getContext('2d').getImageData(0, 0, this.m_mask_canvas.width, this.m_mask_canvas.height)
+            let currentImageData = ctx_final.getImageData(0, 0, canvas.width, canvas.height)
 
-        for (var i = 0; i < imageDataOrigin.data.length; i += 4) {
-          if (imageDataOrigin.data[i + 3] < 200) {
-            continue
-          } else {
-            imageDataShow.data[i + 0] = currentImageData.data[i + 0]
-            imageDataShow.data[i + 1] = currentImageData.data[i + 1]
-            imageDataShow.data[i + 2] = currentImageData.data[i + 2]
-            imageDataShow.data[i + 3] = currentImageData.data[i + 3]
+            for (var i = 0; i < imageDataOrigin.data.length; i += 4) {
+              if (imageDataOrigin.data[i + 3] < 200) {
+                continue
+              } else {
+                imageDataShow.data[i + 0] = currentImageData.data[i + 0]
+                imageDataShow.data[i + 1] = currentImageData.data[i + 1]
+                imageDataShow.data[i + 2] = currentImageData.data[i + 2]
+                imageDataShow.data[i + 3] = currentImageData.data[i + 3]
+              }
+            }
+            this.m_mask_canvas.getContext('2d').putImageData(imageDataShow, 0, 0)
+            callback && callback()
           }
+          image.src = canvas.toDataURL()
+        } else {
+          // 设置 imageData
+          let imageDataOrigin = this.m_origin_mask_canvas.getContext('2d').getImageData(0, 0, this.m_origin_mask_canvas.width, this.m_origin_mask_canvas.height)
+          let imageDataShow = this.m_mask_canvas.getContext('2d').getImageData(0, 0, this.m_mask_canvas.width, this.m_mask_canvas.height)
+          let currentImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+          for (var i = 0; i < imageDataOrigin.data.length; i += 4) {
+            if (imageDataOrigin.data[i + 3] < 200) {
+              continue
+            } else {
+              imageDataShow.data[i + 0] = currentImageData.data[i + 0]
+              imageDataShow.data[i + 1] = currentImageData.data[i + 1]
+              imageDataShow.data[i + 2] = currentImageData.data[i + 2]
+              imageDataShow.data[i + 3] = currentImageData.data[i + 3]
+            }
+          }
+          this.m_mask_canvas.getContext('2d').putImageData(imageDataShow, 0, 0)
+          callback && callback()
         }
-        this.m_mask_canvas.getContext('2d').putImageData(imageDataShow, 0, 0)
-        callback && callback()
       }
       img.src = src
     },
@@ -610,8 +641,17 @@ export default {
         width: 25%;
         float: left;
         cursor:pointer;
+        position: relative;
         &.active{
           color: #F08200;
+        }
+        input{
+          position: absolute;
+          top:0;
+          left:0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
         }
       }
     }
@@ -725,8 +765,8 @@ export default {
       img{
         top:0;
         left:0;
-        max-height: 100%;
-        max-width: 100%;
+        // max-height: 100%;
+        // max-width: 100%;
         position: absolute;
       }
     }
